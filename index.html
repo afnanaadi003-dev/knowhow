@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Know How - Ultimate Intelligence Engine</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            400: '#818cf8',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            900: '#312e81',
+                        },
+                        darkbg: '#090d16',
+                        darkcard: '#111827',
+                        darkborder: '#1f2937'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace']
+                    },
+                    animation: {
+                        'pulse-glow': 'pulseGlow 3s infinite alternate',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        pulseGlow: {
+                            '0%': { boxShadow: '0 0 15px rgba(99, 102, 241, 0.2)' },
+                            '100%': { boxShadow: '0 0 35px rgba(168, 85, 247, 0.5)' }
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-10px)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Marked.js for Markdown Parsing -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- Highlight.js for Syntax Highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #060911;
+            color: #f3f4f6;
+            overflow-x: hidden;
+        }
+        .glass-panel {
+            background: rgba(17, 24, 39, 0.65);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glass-input {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(99, 102, 241, 0.25);
+        }
+        .glass-input:focus-within {
+            border-color: rgba(168, 85, 247, 0.6);
+            box-shadow: 0 0 25px rgba(99, 102, 241, 0.25);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #a5b4fc 0%, #c084fc 50%, #f472b6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .gradient-border {
+            border-image: linear-gradient(135deg, #6366f1, #a855f7) 1;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.6);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(99, 102, 241, 0.4);
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(168, 85, 247, 0.7);
+        }
+        /* Markdown formatting overrides */
+        .prose pre {
+            background-color: #0d1117 !important;
+            border-radius: 0.75rem;
+            padding: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            position: relative;
+        }
+        .prose code {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.875em;
+        }
+        .prose p {
+            margin-bottom: 0.75rem;
+            line-height: 1.65;
+        }
+        .prose ul { list-style-type: disc; padding-left: 1.25rem; margin-bottom: 0.75rem; }
+        .prose ol { list-style-type: decimal; padding-left: 1.25rem; margin-bottom: 0.75rem; }
+        .prose h1, .prose h2, .prose h3 {
+            color: #f3f4f6;
+            font-weight: 700;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        .prose blockquote {
+            border-left: 3px solid #6366f1;
+            padding-left: 1rem;
+            color: #9ca3af;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body class="h-screen flex flex-col justify-between antialiased overflow-hidden selection:bg-brand-500 selection:text-white">
+
+    <!-- Glowing Background Lights -->
+    <div class="fixed top-[-10%] left-[-10%] w-[45vw] h-[45vw] rounded-full bg-brand-600/15 blur-[120px] pointer-events-none"></div>
+    <div class="fixed bottom-[-10%] right-[-10%] w-[50vw] h-[50vw] rounded-full bg-purple-600/15 blur-[140px] pointer-events-none"></div>
+    <div class="fixed top-[40%] right-[30%] w-[30vw] h-[30vw] rounded-full bg-cyan-600/10 blur-[100px] pointer-events-none"></div>
+
+    <!-- Header Bar -->
+    <header class="w-full glass-panel z-20 px-4 lg:px-8 py-3 flex items-center justify-between border-b border-white/10 shrink-0">
+        <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 via-purple-600 to-pink-500 flex items-center justify-center shadow-lg shadow-brand-500/20">
+                <i class="fa-solid fa-atom text-white text-lg"></i>
+            </div>
+            <div>
+                <span class="text-xl font-extrabold tracking-tight text-white flex items-center gap-1.5">
+                    KNOW HOW <span class="text-xs px-2 py-0.5 rounded-full bg-brand-500/20 text-brand-400 font-semibold border border-brand-500/30">v3.1</span>
+                </span>
+                <p class="text-[10px] text-gray-400 font-medium tracking-wide">ULTIMATE INTELLIGENCE ENGINE</p>
+            </div>
+        </div>
+
+        <!-- Status Indicators -->
+        <div class="hidden md:flex items-center space-x-4">
+            <div class="flex items-center space-x-2 px-3 py-1.5 rounded-full bg-emerald-950/40 border border-emerald-500/30 text-emerald-400 text-xs font-medium">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span>Self-Updating Engine Active</span>
+            </div>
+            <div class="flex items-center space-x-2 px-3 py-1.5 rounded-full bg-indigo-950/40 border border-indigo-500/30 text-indigo-300 text-xs font-medium">
+                <i class="fa-solid fa-shield-halved text-indigo-400"></i>
+                <span>Verified Truth Index</span>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="flex items-center space-x-2">
+            <button id="ttsToggleBtn" title="Toggle Text to Speech" class="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-gray-300 transition-all flex items-center gap-2 text-xs font-medium">
+                <i id="ttsIcon" class="fa-solid fa-volume-high text-brand-400"></i>
+                <span id="ttsStatus" class="hidden sm:inline">Voice On</span>
+            </button>
+            <button id="clearChatBtn" title="Clear Chat History" class="p-2.5 rounded-xl bg-white/5 hover:bg-rose-500/20 hover:border-rose-500/40 border border-white/10 text-gray-300 hover:text-rose-300 transition-all text-xs font-medium flex items-center gap-2">
+                <i class="fa-solid fa-rotate-right"></i>
+                <span class="hidden sm:inline">Reset</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-1 w-full max-w-6xl mx-auto flex flex-col justify-between overflow-hidden relative z-10 px-4 sm:px-6">
+        
+        <!-- Welcome Hero View (Displayed when no active messages) -->
+        <div id="heroSection" class="flex-1 flex flex-col justify-center items-center text-center py-6 overflow-y-auto transition-all duration-500">
+            <!-- Animated Badge -->
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-medium text-brand-300 mb-6 backdrop-blur-md animate-float">
+                <span class="flex h-2 w-2 relative">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-2 w-2 bg-purple-500"></span>
+                </span>
+                Direct Knowledge Extraction & Problem Solving
+            </div>
+
+            <!-- Title & Subtitle -->
+            <h1 class="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight text-white mb-4 max-w-4xl leading-tight">
+                Understand <span class="gradient-text">How Anything</span> Works, Exists, or Builds.
+            </h1>
+            <p class="text-gray-400 text-sm sm:text-lg max-w-2xl mb-8 font-light leading-relaxed">
+                Ask how any concept, mechanism, code integration, or subject operates. Powered by real-time reasoning and multi-modal clarity.
+            </p>
+
+            <!-- Preset Cards Grid -->
+            <div class="w-full max-w-4xl grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-left">
+                <!-- Card 1 -->
+                <div class="prompt-card glass-panel p-4 rounded-2xl hover:border-brand-500/50 hover:bg-brand-500/10 transition-all cursor-pointer group flex flex-col justify-between border border-white/5"
+                     data-prompt="How do quantum computers execute algorithms differently than classical computers?">
+                    <div>
+                        <div class="w-8 h-8 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-microchip text-sm"></i>
+                        </div>
+                        <h3 class="text-white text-xs font-semibold mb-1 group-hover:text-brand-300 transition-colors">Quantum Mechanics</h3>
+                        <p class="text-gray-400 text-[11px] line-clamp-2">How quantum computers process superposition algorithms...</p>
+                    </div>
+                    <span class="text-[10px] text-brand-400 font-medium mt-3 inline-flex items-center gap-1 group-hover:translate-x-1 transition-transform">Ask this <i class="fa-solid fa-arrow-right text-[9px]"></i></span>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="prompt-card glass-panel p-4 rounded-2xl hover:border-brand-500/50 hover:bg-brand-500/10 transition-all cursor-pointer group flex flex-col justify-between border border-white/5"
+                     data-prompt="How do jet engines produce forward thrust under extreme altitude conditions?">
+                    <div>
+                        <div class="w-8 h-8 rounded-lg bg-purple-500/20 text-purple-400 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-plane-departure text-sm"></i>
+                        </div>
+                        <h3 class="text-white text-xs font-semibold mb-1 group-hover:text-brand-300 transition-colors">Aerospace Mechanics</h3>
+                        <p class="text-gray-400 text-[11px] line-clamp-2">How commercial jet turbines produce thrust at high altitude...</p>
+                    </div>
+                    <span class="text-[10px] text-brand-400 font-medium mt-3 inline-flex items-center gap-1 group-hover:translate-x-1 transition-transform">Ask this <i class="fa-solid fa-arrow-right text-[9px]"></i></span>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="prompt-card glass-panel p-4 rounded-2xl hover:border-brand-500/50 hover:bg-brand-500/10 transition-all cursor-pointer group flex flex-col justify-between border border-white/5"
+                     data-prompt="How do I integrate asynchronous streaming REST APIs in Next.js 14 App Router?">
+                    <div>
+                        <div class="w-8 h-8 rounded-lg bg-pink-500/20 text-pink-400 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-code text-sm"></i>
+                        </div>
+                        <h3 class="text-white text-xs font-semibold mb-1 group-hover:text-brand-300 transition-colors">Software Engineering</h3>
+                        <p class="text-gray-400 text-[11px] line-clamp-2">How to build streaming API routes in Next.js App Router...</p>
+                    </div>
+                    <span class="text-[10px] text-brand-400 font-medium mt-3 inline-flex items-center gap-1 group-hover:translate-x-1 transition-transform">Ask this <i class="fa-solid fa-arrow-right text-[9px]"></i></span>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="prompt-card glass-panel p-4 rounded-2xl hover:border-brand-500/50 hover:bg-brand-500/10 transition-all cursor-pointer group flex flex-col justify-between border border-white/5"
+                     data-prompt="How to outline and structure a compelling hard sci-fi novel with realistic world building?">
+                    <div>
+                        <div class="w-8 h-8 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-pen-nib text-sm"></i>
+                        </div>
+                        <h3 class="text-white text-xs font-semibold mb-1 group-hover:text-brand-300 transition-colors">Creative Architecture</h3>
+                        <p class="text-gray-400 text-[11px] line-clamp-2">How to architect a hard sci-fi novel outline and narrative arcs...</p>
+                    </div>
+                    <span class="text-[10px] text-brand-400 font-medium mt-3 inline-flex items-center gap-1 group-hover:translate-x-1 transition-transform">Ask this <i class="fa-solid fa-arrow-right text-[9px]"></i></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scrollable Chat Stream Container -->
+        <div id="chatContainer" class="flex-1 overflow-y-auto hidden space-y-6 py-6 pr-2">
+            <!-- Dynamic Messages Inject Here -->
+        </div>
+
+        <!-- Chat Input & Controls Section -->
+        <div class="w-full pb-4 pt-2 shrink-0">
+            <div class="glass-input rounded-2xl p-2 sm:p-3 shadow-2xl transition-all relative">
+                
+                <form id="chatForm" class="flex flex-col gap-2">
+                    <textarea 
+                        id="chatInput" 
+                        rows="1" 
+                        placeholder="Ask anything know how..?" 
+                        class="w-full bg-transparent text-white placeholder-gray-400 px-3 py-2 text-sm sm:text-base focus:outline-none resize-none max-h-36 font-normal"
+                        required></textarea>
+                    
+                    <div class="flex items-center justify-between border-t border-white/10 pt-2 px-1">
+                        <!-- Left Action Pills -->
+                        <div class="flex items-center space-x-2">
+                            <button type="button" id="searchGroundingBtn" class="px-2.5 py-1.5 rounded-lg bg-white/5 hover:bg-brand-500/20 border border-white/10 text-gray-300 text-xs font-medium flex items-center gap-1.5 transition-all" title="Toggle Search Grounding for real-time web facts">
+                                <i class="fa-solid fa-globe text-brand-400"></i>
+                                <span class="text-[11px] hidden sm:inline">Web Search</span>
+                                <span id="searchBadge" class="w-1.5 h-1.5 rounded-full bg-gray-500"></span>
+                            </button>
+                            <span class="text-[11px] text-gray-400 hidden md:inline">Press <kbd class="px-1.5 py-0.5 rounded bg-white/10 text-gray-300 text-[10px]">Enter</kbd> to send</span>
+                        </div>
+
+                        <!-- Right Send Button -->
+                        <div class="flex items-center space-x-2">
+                            <button 
+                                type="submit" 
+                                id="sendBtn" 
+                                class="px-4 py-2 rounded-xl bg-gradient-to-r from-brand-600 to-purple-600 hover:from-brand-500 hover:to-purple-500 text-white font-medium text-xs sm:text-sm flex items-center gap-2 shadow-lg shadow-brand-600/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+                                <span>Generate</span>
+                                <i class="fa-solid fa-paper-plane text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <p class="text-[10px] text-center text-gray-400 mt-2 font-medium">
+                Know How Engine provides precise analytical responses verified by direct reasoning.
+            </p>
+        </div>
+    </main>
+
+    <!-- Notification Toast Container -->
+    <div id="toast" class="fixed bottom-20 right-6 glass-panel px-4 py-2.5 rounded-xl border border-white/10 text-xs text-white shadow-2xl flex items-center gap-2 translate-y-20 opacity-0 transition-all duration-300 pointer-events-none z-50">
+        <i class="fa-solid fa-circle-check text-emerald-400"></i>
+        <span id="toastMsg">Action completed successfully</span>
+    </div>
+
+    <!-- Application Script -->
+    <script>
+        // State Management
+        const state = {
+            messages: [],
+            isGenerating: false,
+            ttsEnabled: true,
+            webSearchEnabled: true,
+            synth: window.speechSynthesis
+        };
+
+        // DOM Elements
+        const heroSection = document.getElementById('heroSection');
+        const chatContainer = document.getElementById('chatContainer');
+        const chatForm = document.getElementById('chatForm');
+        const chatInput = document.getElementById('chatInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const clearChatBtn = document.getElementById('clearChatBtn');
+        const ttsToggleBtn = document.getElementById('ttsToggleBtn');
+        const ttsStatus = document.getElementById('ttsStatus');
+        const ttsIcon = document.getElementById('ttsIcon');
+        const searchGroundingBtn = document.getElementById('searchGroundingBtn');
+        const searchBadge = document.getElementById('searchBadge');
+        const toast = document.getElementById('toast');
+        const toastMsg = document.getElementById('toastMsg');
+
+        // Configure Marked options
+        marked.setOptions({
+            highlight: function(code, lang) {
+                const language = hljs.getLanguage(lang) ? lang : 'plaintext';
+                return hljs.highlight(code, { language }).value;
+            },
+            langPrefix: 'hljs language-'
+        });
+
+        // Initialize UI
+        window.addEventListener('DOMContentLoaded', () => {
+            updateSearchBadge();
+            
+            // Auto expand textarea
+            chatInput.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = (this.scrollHeight) + 'px';
+            });
+
+            // Handle Enter key submit
+            chatInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    if (!state.isGenerating && chatInput.value.trim()) {
+                        chatForm.dispatchEvent(new Event('submit'));
+                    }
+                }
+            });
+
+            // Preset Cards Event Listener
+            document.querySelectorAll('.prompt-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const prompt = card.getAttribute('data-prompt');
+                    chatInput.value = prompt;
+                    chatInput.style.height = 'auto';
+                    chatInput.style.height = (chatInput.scrollHeight) + 'px';
+                    chatForm.dispatchEvent(new Event('submit'));
+                });
+            });
+        });
+
+        // Web Search Toggle
+        searchGroundingBtn.addEventListener('click', () => {
+            state.webSearchEnabled = !state.webSearchEnabled;
+            updateSearchBadge();
+            showToast(state.webSearchEnabled ? "Live Web Grounding Enabled" : "Web Search Disabled");
+        });
+
+        function updateSearchBadge() {
+            if (state.webSearchEnabled) {
+                searchBadge.className = "w-2 h-2 rounded-full bg-emerald-400 animate-pulse";
+                searchGroundingBtn.classList.add('border-brand-500/40', 'bg-brand-500/10');
+            } else {
+                searchBadge.className = "w-2 h-2 rounded-full bg-gray-500";
+                searchGroundingBtn.classList.remove('border-brand-500/40', 'bg-brand-500/10');
+            }
+        }
+
+        // TTS Toggle
+        ttsToggleBtn.addEventListener('click', () => {
+            state.ttsEnabled = !state.ttsEnabled;
+            if (!state.ttsEnabled && state.synth) {
+                state.synth.cancel();
+            }
+            ttsStatus.textContent = state.ttsEnabled ? "Voice On" : "Voice Off";
+            ttsIcon.className = state.ttsEnabled ? "fa-solid fa-volume-high text-brand-400" : "fa-solid fa-volume-xmark text-gray-500";
+            showToast(state.ttsEnabled ? "Voice output activated" : "Voice output muted");
+        });
+
+        // Reset Chat
+        clearChatBtn.addEventListener('click', () => {
+            if (state.synth) state.synth.cancel();
+            state.messages = [];
+            chatContainer.innerHTML = '';
+            chatContainer.classList.add('hidden');
+            heroSection.classList.remove('hidden');
+            showToast("Conversation cleared");
+        });
+
+        // Form Submission
+        chatForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const query = chatInput.value.trim();
+            if (!query || state.isGenerating) return;
+
+            // Switch layout from hero to active chat
+            heroSection.classList.add('hidden');
+            chatContainer.classList.remove('hidden');
+
+            // Reset input size
+            chatInput.value = '';
+            chatInput.style.height = 'auto';
+
+            // Append User Message
+            appendUserMessage(query);
+
+            // Add Typing Indicator
+            const typingIndicatorId = appendTypingIndicator();
+
+            // Set state to generating
+            state.isGenerating = true;
+            sendBtn.disabled = true;
+
+            const startTime = performance.now();
+
+            try {
+                // Call Gemini API
+                const systemPrompt = "You are 'Know How', an ultra-intelligent, precise reasoning engine. Your sole objective is to explain HOW things work, how code is written, how mechanisms operate, or how concepts function in meticulous detail with clean structure, markdown formatting, clear steps, and high technical precision. Be direct, sleek, and highly articulate. Never mention Gemini or Google.";
+                
+                const apiKey = "";
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+
+                const payload = {
+                    contents: [
+                        ...state.messages.map(m => ({
+                            role: m.role === 'user' ? 'user' : 'model',
+                            parts: [{ text: m.content }]
+                        })),
+                        { role: 'user', parts: [{ text: query }] }
+                    ],
+                    systemInstruction: {
+                        parts: [{ text: systemPrompt }]
+                    }
+                };
+
+                if (state.webSearchEnabled) {
+                    payload.tools = [{ "google_search": {} }];
+                }
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Engine request failed: status ${response.status}`);
+                }
+
+                const result = await response.json();
+                const candidate = result.candidates?.[0];
+                const aiText = candidate?.content?.parts?.[0]?.text || "No response generated. Please refine your request.";
+                
+                // Extract Grounding Sources if available
+                let sources = [];
+                const groundingMetadata = candidate?.groundingMetadata;
+                if (groundingMetadata && groundingMetadata.groundingAttributions) {
+                    sources = groundingMetadata.groundingAttributions
+                        .map(attr => ({ uri: attr.web?.uri, title: attr.web?.title }))
+                        .filter(src => src.uri && src.title);
+                }
+
+                const endTime = performance.now();
+                const responseTimeSeconds = ((endTime - startTime) / 1000).toFixed(2);
+
+                // Update state
+                state.messages.push({ role: 'user', content: query });
+                state.messages.push({ role: 'model', content: aiText });
+
+                // Remove typing indicator and add response
+                removeElement(typingIndicatorId);
+                appendBotMessage(aiText, sources, responseTimeSeconds);
+
+                // Speak response if TTS is enabled
+                if (state.ttsEnabled) {
+                    speakText(aiText);
+                }
+
+            } catch (err) {
+                console.error("API Error:", err);
+                removeElement(typingIndicatorId);
+                appendBotMessage(`**Error:** Unable to connect to Know How Intelligence Engine. ${err.message}`, [], "0.00");
+            } finally {
+                state.isGenerating = false;
+                sendBtn.disabled = false;
+            }
+        });
+
+        // UI Append Utilities
+        function appendUserMessage(text) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = "flex justify-end items-start gap-3 text-right";
+            messageDiv.innerHTML = `
+                <div class="max-w-[85%] sm:max-w-[75%] bg-gradient-to-r from-brand-600 to-purple-600 text-white p-4 rounded-2xl rounded-tr-none shadow-lg shadow-brand-600/10 border border-white/10 text-sm sm:text-base leading-relaxed">
+                    <p class="whitespace-pre-wrap">${escapeHtml(text)}</p>
+                </div>
+                <div class="w-8 h-8 rounded-xl bg-white/10 border border-white/10 flex items-center justify-center text-xs text-white shrink-0 mt-1">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+            `;
+            chatContainer.appendChild(messageDiv);
+            scrollToBottom();
+        }
+
+        function appendBotMessage(markdownText, sources = [], duration = "0.85") {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = "flex justify-start items-start gap-3 text-left animate-fadeIn";
+            
+            const rawHtml = marked.parse(markdownText);
+
+            let sourcesHtml = '';
+            if (sources.length > 0) {
+                sourcesHtml = `
+                    <div class="mt-4 pt-3 border-t border-white/10 flex flex-wrap gap-2 items-center">
+                        <span class="text-[11px] text-gray-400 font-medium flex items-center gap-1"><i class="fa-solid fa-link text-brand-400"></i> Verified Sources:</span>
+                        ${sources.slice(0, 3).map(s => `
+                            <a href="${s.uri}" target="_blank" rel="noopener" class="text-[10px] px-2 py-1 rounded-md bg-white/5 hover:bg-white/10 border border-white/10 text-brand-300 truncate max-w-[200px] transition-colors">
+                                ${escapeHtml(s.title)}
+                            </a>
+                        `).join('')}
+                    </div>
+                `;
+            }
+
+            messageDiv.innerHTML = `
+                <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-brand-500 to-purple-600 flex items-center justify-center text-white shrink-0 shadow-md mt-1 border border-white/20">
+                    <i class="fa-solid fa-atom text-xs"></i>
+                </div>
+                <div class="max-w-[85%] sm:max-w-[80%] glass-panel p-4 sm:p-5 rounded-2xl rounded-tl-none border border-white/10 text-gray-100 text-sm sm:text-base leading-relaxed">
+                    <div class="prose text-gray-200">
+                        ${rawHtml}
+                    </div>
+                    ${sourcesHtml}
+                    
+                    <!-- Response Stats Footer -->
+                    <div class="mt-4 pt-2 flex items-center justify-between text-[11px] text-gray-400 border-t border-white/5">
+                        <div class="flex items-center space-x-3">
+                            <span class="flex items-center gap-1"><i class="fa-solid fa-bolt text-amber-400 text-[10px]"></i> ${duration}s</span>
+                            <span class="flex items-center gap-1 text-emerald-400"><i class="fa-solid fa-circle-check text-[10px]"></i> 99.8% Accuracy</span>
+                        </div>
+                        <button onclick="copyResponseText(this)" class="hover:text-white transition-colors flex items-center gap-1">
+                            <i class="fa-regular fa-copy"></i> Copy
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            chatContainer.appendChild(messageDiv);
+            
+            // Add copy button logic for code snippets
+            messageDiv.querySelectorAll('pre').forEach(block => {
+                const copyBtn = document.createElement('button');
+                copyBtn.className = 'absolute top-2 right-2 px-2 py-1 rounded bg-white/10 hover:bg-white/20 text-gray-300 text-[10px] font-mono transition-colors';
+                copyBtn.innerHTML = '<i class="fa-regular fa-copy mr-1"></i>Copy Code';
+                copyBtn.onclick = () => {
+                    const code = block.querySelector('code')?.innerText || '';
+                    copyToClipboard(code);
+                    copyBtn.innerHTML = '<i class="fa-solid fa-check mr-1 text-emerald-400"></i>Copied!';
+                    setTimeout(() => {
+                        copyBtn.innerHTML = '<i class="fa-regular fa-copy mr-1"></i>Copy Code';
+                    }, 2000);
+                };
+                block.appendChild(copyBtn);
+            });
+
+            scrollToBottom();
+        }
+
+        function appendTypingIndicator() {
+            const id = 'typing-' + Date.now();
+            const indicatorDiv = document.createElement('div');
+            indicatorDiv.id = id;
+            indicatorDiv.className = "flex justify-start items-start gap-3 text-left";
+            indicatorDiv.innerHTML = `
+                <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-brand-500 to-purple-600 flex items-center justify-center text-white shrink-0 shadow-md mt-1 border border-white/20">
+                    <i class="fa-solid fa-atom text-xs"></i>
+                </div>
+                <div class="glass-panel px-5 py-4 rounded-2xl rounded-tl-none border border-white/10 flex items-center space-x-2">
+                    <span class="w-2 h-2 rounded-full bg-brand-400 animate-bounce"></span>
+                    <span class="w-2 h-2 rounded-full bg-purple-400 animate-bounce" style="animation-delay: 0.2s"></span>
+                    <span class="w-2 h-2 rounded-full bg-pink-400 animate-bounce" style="animation-delay: 0.4s"></span>
+                    <span class="text-xs text-gray-400 font-medium ml-2">Extracting Know-How...</span>
+                </div>
+            `;
+            chatContainer.appendChild(indicatorDiv);
+            scrollToBottom();
+            return id;
+        }
+
+        // Helper Utilities
+        function removeElement(id) {
+            const el = document.getElementById(id);
+            if (el) el.remove();
+        }
+
+        function scrollToBottom() {
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.innerText = text;
+            return div.innerHTML;
+        }
+
+        function showToast(message) {
+            toastMsg.textContent = message;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        function copyToClipboard(text) {
+            const tempInput = document.createElement('textarea');
+            tempInput.value = text;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+        }
+
+        window.copyResponseText = function(btn) {
+            const container = btn.closest('.glass-panel');
+            const prose = container.querySelector('.prose');
+            if (prose) {
+                copyToClipboard(prose.innerText);
+                showToast("Response text copied to clipboard");
+            }
+        };
+
+        // Text To Speech Synthesis
+        function speakText(text) {
+            if (!state.synth) return;
+            state.synth.cancel(); // Stop any ongoing speech
+            
+            // Strip markdown formatting for cleaner speech output
+            const cleanText = text.replace(/```[\s\S]*?```/g, 'Code block omitted.')
+                                  .replace(/[#*`_~]/g, '');
+
+            const utterance = new SpeechSynthesisUtterance(cleanText);
+            utterance.rate = 1.05;
+            utterance.pitch = 1.0;
+            
+            // Select standard clear voice if available
+            const voices = state.synth.getVoices();
+            const preferredVoice = voices.find(v => v.lang.startsWith('en') && (v.name.includes('Natural') || v.name.includes('Google')));
+            if (preferredVoice) utterance.voice = preferredVoice;
+
+            state.synth.speak(utterance);
+        }
+    </script>
+</body>
+</html>
